@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace Meetandgreet.Pages
 {
     /// <summary>
-    /// Interaction logic for LogIn.xaml
+    /// Interaction logic for Createacc.xaml
     /// </summary>
-    public partial class LogIn : Page
+    public partial class Createacc : Page
     {
-        public LogIn()
+        public Createacc()
         {
             InitializeComponent();
         }
