@@ -29,5 +29,11 @@ namespace Meetandgreet.Pages
         {
             NavigationService.Navigate(new Loginpage());
         }
+
+        private void CreateAccount_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Createacc());
+        }
+
     }
 }

@@ -62,9 +62,19 @@
                     </Button.Resources>
                 </Button>
 
-                <Button Content="Back" Background="Transparent" Foreground="#F7E7CE" 
-                        BorderThickness="0" Margin="0,15,0,0" Cursor="Hand"
-                        Click="BackButton_Click"/>
+                <Button Content="Back" 
+        Click="BackButton_Click"
+        Foreground="#F7E7CE" 
+        Margin="0,15,0,0" 
+        Cursor="Hand"
+        Background="Transparent"
+        BorderThickness="0">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
             </StackPanel>
         </Border>
     </Grid>

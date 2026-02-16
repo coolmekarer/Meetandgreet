@@ -55,6 +55,7 @@
             </TextBlock>
 
             <Button Content="CREATE ACCOUNT" 
+                Click="CreateAccount_Click"
                 Width="260" Height="55" 
                 Background="#FF4D4D" Foreground="White" 
                 FontWeight="Bold" BorderThickness="0" 

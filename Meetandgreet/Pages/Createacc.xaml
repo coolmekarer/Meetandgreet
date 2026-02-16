@@ -66,6 +66,18 @@
                             </Style>
                         </Button.Resources>
                     </Button>
+                    <Button Click="Back_Click" 
+         BorderThickness="0" Margin="0,15,0,0" Cursor="Hand">
+                        <TextBlock Text="←Go Back" 
+               Foreground="Gray" 
+               FontSize="12" 
+               TextDecorations="Underline"/>
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <ContentPresenter />
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
                 </StackPanel>
             </Border>
         </Viewbox>
