@@ -54,7 +54,7 @@
                 <Button Content="SIGN IN" 
                         Height="50" Background="#FF4D4D" Foreground="White" 
                         FontWeight="Bold" BorderThickness="0" Cursor="Hand"
-                        Command="{Binding LoginCommand}">
+                        Command="{Binding LoginCommand}" Click="CheckLogIn_Click">
                     <Button.Resources>
                         <Style TargetType="Border">
                             <Setter Property="CornerRadius" Value="25"/>

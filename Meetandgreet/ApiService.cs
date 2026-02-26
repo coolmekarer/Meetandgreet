@@ -13,18 +13,28 @@ namespace Meetandgreet
 {
     public class ApiService
     {
-        private readonly HttpClient _httpClient;
-
-        public ApiService() 
+        private static readonly HttpClient _httpClient = new HttpClient
         {
-            _httpClient = new HttpClient();
-            // Replace this with your actual API URL (usually found when you run the API project)
-            _httpClient.BaseAddress = new Uri("http://localhost:5105/swagger/v1/swagger.json");
+            // FIX: Point this to the ROOT address, not the swagger.json file
+            BaseAddress = new Uri("http://localhost:5105/")
+        };
+
+        // This makes the method accessible to your LoginPage
+        public static async Task<List<User>> GetAllUser()
+        {
+            try
+            {
+                // Update this string to match your API's "Get All" endpoint
+                return await _httpClient.GetFromJsonAsync<List<User>>("api/Dates/UserSelector");
+            }
+            catch
+            {
+                return new List<User>(); // Returns empty list if API is down
+            }
         }
 
-        public async Task<bool> RegisterUserAsync(User user)
+        public static async Task<bool> RegisterUserAsync(User user)
         {
-            // This sends your model as JSON to your API Controller
             var response = await _httpClient.PostAsJsonAsync("api/Dates/InsertAUser", user);
             return response.IsSuccessStatusCode;
         }
