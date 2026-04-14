@@ -10,13 +10,13 @@
 
     <Grid>
         <Image Source="/Images/adamandeve1.jpg" Stretch="UniformToFill" />
-        
+
         <Viewbox Stretch="Uniform" MaxHeight="800">
             <Border VerticalAlignment="Center" HorizontalAlignment="Center" 
-                Width="420" Padding="30" CornerRadius="30"
-                Background="#CC1A1A1A" BorderBrush="#33FFFFFF" BorderThickness="1">
+                    Width="420" Padding="30" CornerRadius="30"
+                    Background="#CC1A1A1A" BorderBrush="#33FFFFFF" BorderThickness="1">
                 <Border.Effect>
-                    <DropShadowEffect BlurRadius="50" Color="Black" Opacity="0" ShadowDepth="0"/>
+                    <DropShadowEffect BlurRadius="50" Color="Black" Opacity="0.5" ShadowDepth="0"/>
                 </Border.Effect>
 
                 <StackPanel>
@@ -24,7 +24,7 @@
                     <TextBlock Text="Start your journey to find 'The One'" Foreground="#F7E7CE" FontSize="14" HorizontalAlignment="Center" Margin="0,5,0,25"/>
 
                     <TextBlock Text="Full Name" Foreground="White" FontSize="12" Margin="5,0,0,3"/>
-                    <TextBox Height="35" Margin="0,0,0,12" Background="#33FFFFFF" Foreground="White" BorderThickness="1" BorderBrush="#66F7E7CE" VerticalContentAlignment="Center" Padding="10,0">
+                    <TextBox x:Name="NameInput" Height="35" Margin="0,0,0,12" Background="#33FFFFFF" Foreground="White" BorderThickness="1" BorderBrush="#66F7E7CE" VerticalContentAlignment="Center" Padding="10,0">
                         <TextBox.Resources>
                             <Style TargetType="Border">
                                 <Setter Property="CornerRadius" Value="8"/>
@@ -33,7 +33,7 @@
                     </TextBox>
 
                     <TextBlock Text="Email" Foreground="White" FontSize="12" Margin="5,0,0,3"/>
-                    <TextBox Height="35" Margin="0,0,0,12" Background="#33FFFFFF" Foreground="White" BorderThickness="1" BorderBrush="#66F7E7CE" VerticalContentAlignment="Center" Padding="10,0">
+                    <TextBox x:Name="EmailInput" Height="35" Margin="0,0,0,12" Background="#33FFFFFF" Foreground="White" BorderThickness="1" BorderBrush="#66F7E7CE" VerticalContentAlignment="Center" Padding="10,0">
                         <TextBox.Resources>
                             <Style TargetType="Border">
                                 <Setter Property="CornerRadius" Value="8"/>
@@ -43,13 +43,13 @@
 
                     <TextBlock Text="I am..." Foreground="White" FontSize="12" Margin="5,0,0,5"/>
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
-                        <RadioButton Content="Male" Foreground="White" Margin="0,0,15,0" IsChecked="True"/>
-                        <RadioButton Content="Female" Foreground="White" Margin="0,0,15,0"/>
-                        <RadioButton Content="Non-Binary" Foreground="White"/>
+                        <RadioButton x:Name="MaleBtn" Content="Male" Foreground="White" Margin="0,0,15,0" IsChecked="True"/>
+                        <RadioButton x:Name="FemaleBtn" Content="Female" Foreground="White" Margin="0,0,15,0"/>
+                        <RadioButton x:Name="OtherBtn" Content="Non-Binary" Foreground="White"/>
                     </StackPanel>
 
                     <TextBlock Text="Create Password" Foreground="White" FontSize="12" Margin="5,0,0,3"/>
-                    <PasswordBox Height="35" Margin="0,0,0,20" Background="#33FFFFFF" Foreground="White" BorderThickness="1" BorderBrush="#66F7E7CE" VerticalContentAlignment="Center" Padding="10,0">
+                    <PasswordBox x:Name="PassInput" Height="35" Margin="0,0,0,20" Background="#33FFFFFF" Foreground="White" BorderThickness="1" BorderBrush="#66F7E7CE" VerticalContentAlignment="Center" Padding="10,0">
                         <PasswordBox.Resources>
                             <Style TargetType="Border">
                                 <Setter Property="CornerRadius" Value="8"/>
@@ -57,21 +57,19 @@
                         </PasswordBox.Resources>
                     </PasswordBox>
 
-                  
-
-                    <Button Content="GET STARTED" Height="50" Background="#FF4D4D" Foreground="White" FontWeight="Bold" BorderThickness="0" Cursor="Hand">
+                    <Button Content="GET STARTED" Click="SignUp_Click" Height="50" Background="#FF4D4D" Foreground="White" FontWeight="Bold" BorderThickness="0" Cursor="Hand">
                         <Button.Resources>
                             <Style TargetType="Border">
                                 <Setter Property="CornerRadius" Value="25"/>
                             </Style>
                         </Button.Resources>
                     </Button>
-                    <Button Click="Back_Click" 
-         BorderThickness="0" Margin="0,15,0,0" Cursor="Hand">
-                        <TextBlock Text="←Go Back" 
-               Foreground="Gray" 
-               FontSize="12" 
-               TextDecorations="Underline"/>
+
+                    <Button Click="Back_Click" BorderThickness="0" Margin="0,15,0,0" Cursor="Hand">
+                        <TextBlock Text="← Go Back to Login" 
+                                   Foreground="Gray" 
+                                   FontSize="12" 
+                                   TextDecorations="Underline"/>
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
                                 <ContentPresenter />
