@@ -9,6 +9,41 @@
       Title="Settingup">
 
     <Grid>
-        
+        <Image Source="/Images/apples.png" Stretch="UniformToFill" />
+        <Border Background="#80FFB300" Opacity="0.3" />
+
+        <Viewbox Stretch="Uniform" MaxHeight="800">
+            <Border VerticalAlignment="Center" HorizontalAlignment="Center" 
+                Width="420" Padding="35" CornerRadius="30"
+                Background="#CC1A1A1A" BorderBrush="#33FFFFFF" BorderThickness="1">
+                <StackPanel>
+                    <TextBlock Text="Discovery Settings" Foreground="White" FontSize="32" FontWeight="Bold" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Who should we find for you?" Foreground="#F7E7CE" FontSize="14" HorizontalAlignment="Center" Margin="0,5,0,30"/>
+
+                    <DockPanel Margin="0,0,0,10">
+                        <TextBlock Text="Age Range" Foreground="White" FontSize="14"/>
+                        <TextBlock Text="{Binding ElementName=AgeSlider, Path=Value, StringFormat={}{0:0}}" 
+                               Foreground="#F7E7CE" HorizontalAlignment="Right" FontWeight="Bold"/>
+                    </DockPanel>
+                    <Slider x:Name="AgeSlider" Minimum="18" Maximum="99" Value="25" Margin="0,0,0,25" Background="#FF4D4D"/>
+
+                    <DockPanel Margin="0,0,0,10">
+                        <TextBlock Text="Maximum Distance" Foreground="White" FontSize="14"/>
+                        <TextBlock Text="{Binding ElementName=DistSlider, Path=Value, StringFormat={}{0:0} km}" 
+                               Foreground="#F7E7CE" HorizontalAlignment="Right" FontWeight="Bold"/>
+                    </DockPanel>
+                    <Slider x:Name="DistSlider" Minimum="1" Maximum="470" Value="50" Margin="0,0,0,40" Background="#FF4D4D"/>
+
+                    <Button Content="NEXT STEP" Height="55" Background="#FF4D4D" Foreground="White" 
+                        FontWeight="Bold" BorderThickness="0" Cursor="Hand" Click="NextStep_Click">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="27"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                </StackPanel>
+            </Border>
+        </Viewbox>
     </Grid>
 </Page>

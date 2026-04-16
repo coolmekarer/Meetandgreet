@@ -19,6 +19,9 @@
     <Reference Include="ModelDates">
       <HintPath>..\..\coolmekarer\datingappmodel\interfaceapi\bin\Debug\net8.0\ModelDates.dll</HintPath>
     </Reference>
+    <Reference Include="ViewModel">
+      <HintPath>..\..\datingappmodel\‏‏תיקיה חדשה\ViewModel\bin\Debug\net8.0\ViewModel.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
