@@ -37,7 +37,7 @@
                     </Grid>
 
                     <TextBlock Text="About Me" Foreground="White" FontSize="12" Margin="5,0,0,5"/>
-                    <TextBox Height="100" Margin="0,0,0,20" TextWrapping="Wrap" AcceptsReturn="True"
+                    <TextBox x:Name="aboutMe" Height="100" Margin="0,0,0,20" TextWrapping="Wrap" AcceptsReturn="True"
                          Background="#33FFFFFF" Foreground="White" BorderBrush="#66F7E7CE" Padding="10">
                         <TextBox.Resources>
                             <Style TargetType="Border">

@@ -56,32 +56,51 @@ namespace Meetandgreet.Pages
             {
                 Username = fullName,
                 Email = email,
-                Password = password,
+                Password = password, 
 
 
                 Gender = new Gender { Id = selectedGenderId, Name = "Default" }
             };
+            DateTime? selectedDate = BirthdatePicker.SelectedDate;
 
-          
-            try
+            if (selectedDate.HasValue)
             {
-                Apiinter api = new Apiinter();
-                int result = await api.InsertAUser(newUser);
+                DateTime birthday = selectedDate.Value;
+                int age = DateTime.Today.Year - birthday.Year;
 
-                if (result == 1)
+                // Adjust for leap years/months
+                if (birthday > DateTime.Today.AddYears(-age)) age--;
+
+                if (age < 18)
                 {
-                    MessageBox.Show("Welcome! Your account has been created.");
-                    NavigationService.Navigate(new Settingup()); 
+                    MessageBox.Show("You must be at least 18 to join the garden.");
+                    return;
                 }
-                else
-                {
-                    MessageBox.Show("Signup failed. That email might already be registered.");
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error: {ex.Message}");
-            }
+
+                // Now you can save 'age' and 'birthday' to your User object
+                User. = birthday;
+                User.CurrentUser.Age = age;
+                NavigationService.Navigate(new Settingup(newUser));
+
+            //try
+            //{
+            //    Apiinter api = new Apiinter();
+            //    int result = await api.InsertAUser(newUser);
+
+            //    if (result == 1)
+            //    {
+            //        MessageBox.Show("Welcome! Your account has been created.");
+            //        NavigationService.Navigate(new Settingup()); 
+            //    }
+            //    else
+            //    {
+            //        MessageBox.Show("Signup failed. That email might already be registered.");
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show($"Error: {ex.Message}");
+            //}
         }
     }
 }

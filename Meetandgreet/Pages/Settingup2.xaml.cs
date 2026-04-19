@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ModelDates;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +21,17 @@ namespace Meetandgreet.Pages
     /// </summary>
     public partial class Settingup2 : Page
     {
-        public Settingup2()
+        private User currentUser;
+        public Settingup2(User usr)
         {
             InitializeComponent();
+            currentUser = usr;
+        }
+
+        private void Finish_Click(object sender, RoutedEventArgs e)
+        {
+            currentUser.Bio = aboutMe.Text;
+            NavigationService.Navigate(new Homepage(currentUser));
         }
     }
 }
