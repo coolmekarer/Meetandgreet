@@ -25,6 +25,9 @@ namespace Meetandgreet.Pages
         {
             InitializeComponent();
         }
+
+       
+
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.GoBack();
@@ -59,7 +62,7 @@ namespace Meetandgreet.Pages
             else
             {
 
-                NavigationService.Navigate(new Homepage());
+                NavigationService.Navigate(new Homepage(user));
             }
         }
     }
