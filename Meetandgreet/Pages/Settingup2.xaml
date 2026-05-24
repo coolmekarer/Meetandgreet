@@ -48,9 +48,10 @@
 
                     <TextBlock Text="Interested in..." Foreground="White" FontSize="12" Margin="5,0,0,8"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,30">
-                        <RadioButton Content="Males" Foreground="White" Margin="0,0,15,0"/>
-                        <RadioButton Content="Females" Foreground="White" Margin="0,0,15,0"/>
-                        <RadioButton Content="Both" Foreground="White" IsChecked="True"/>
+                        <!-- ADDED NAMES HERE -->
+                        <RadioButton x:Name="PrefMalesBtn" Content="Males" Foreground="White" Margin="0,0,15,0"/>
+                        <RadioButton x:Name="PrefFemalesBtn" Content="Females" Foreground="White" Margin="0,0,15,0"/>
+                        <RadioButton x:Name="PrefBothBtn" Content="Both" Foreground="White" IsChecked="True"/>
                     </StackPanel>
 
                     <Button Content="FINISH SETUP" Height="55" Background="#FF4D4D" Foreground="White" 

@@ -12,33 +12,43 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using interfaceapi;
-using ModelDates;
-using ViewModel;
-
+using ModelDates; // Keeps track of your User model
 
 namespace Meetandgreet.Pages
 {
     /// <summary>
     /// Interaction logic for Settingup.xaml
     /// </summary>
-    public partial class SetupPage1 : Page
+    public partial class Settingup : Page
     {
-        // Replace 'YourExistingViewModel' with the actual name of your class
-        private ViewModel viewModel;
+        // This will temporarily store the user object passed from Createacc
+        private User _newUser;
 
-        public SetupPage1(ViewModel vm)
+        // FIXED: The constructor now takes the 'User' object directly from Createacc page
+        public Settingup(User userFromSignup)
         {
             InitializeComponent();
-            _viewModel = vm;
-            // This is the magic line that connects the XAML to your code
-            this.DataContext = _viewModel;
+            _newUser = userFromSignup;
         }
 
         private void NextStep_Click(object sender, RoutedEventArgs e)
         {
-            // When moving to Step 2, pass the same VM along
-            NavigationService.Navigate(new Settingup2(_viewModel));
+            int MinAge = (int)MinAgeSlider.Value;
+            int MaxAge = (int)MaxAgeSlider.Value;
+            int maxDistanceKm = (int)DistSlider.Value;
+
+            if (MinAge > MaxAge)
+            {
+                MessageBox.Show("Minimum age preference cannot be older than maximum age preference.");
+                return;
+            }
+
+            // Assigning directly to your separate preferences class inside the user!
+            _newUser.Preferences.MinAge = MinAge;
+            _newUser.Preferences.MaxAge = MaxAge;
+            _newUser.Preferences.MaxDistanceKM = maxDistanceKm; // Match your exact preference property names
+
+            NavigationService.Navigate(new Settingup2(_newUser));
         }
     }
 }

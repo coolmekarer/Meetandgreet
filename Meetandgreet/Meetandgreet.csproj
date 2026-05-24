@@ -1,34 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <UseWPF>true</UseWPF>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net8.0-windows</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UseWPF>true</UseWPF>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="Images\adamandeve1.jpg" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Remove="Images\adamandeve1.jpg" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="DatesApi">
-      <HintPath>..\..\datingappmodel3\interfaceapi\bin\Debug\net8.0\DatesApi.dll</HintPath>
-    </Reference>
-    <Reference Include="interfaceapi">
-      <HintPath>..\..\datingappmodel3\interfaceapi\bin\Debug\net8.0\interfaceapi.dll</HintPath>
-    </Reference>
-    <Reference Include="ModelDates">
-      <HintPath>..\..\datingappmodel3\interfaceapi\bin\Debug\net8.0\ModelDates.dll</HintPath>
-    </Reference>
-    <Reference Include="ViewModel">
-      <HintPath>..\..\datingappmodel\ViewModel\obj\Debug\net8.0\ViewModel.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="Images\adamandeve1.jpg" />
-  </ItemGroup>
+	<ItemGroup>
+		<Resource Include="Images\adamandeve1.jpg" />
+	</ItemGroup>
 
 </Project>

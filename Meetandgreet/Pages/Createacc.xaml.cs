@@ -1,5 +1,4 @@
-﻿using interfaceapi;
-using ModelDates;
+﻿using ModelDates;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,32 +34,29 @@ namespace Meetandgreet.Pages
 
         private async void SignUp_Click(object sender, RoutedEventArgs e)
         {
-            
             string fullName = NameInput.Text.Trim();
             string email = EmailInput.Text.Trim();
             string password = PassInput.Password;
 
-
-            // 2. Validation
+            // Validation
             if (string.IsNullOrEmpty(fullName) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
             {
                 MessageBox.Show("Please fill out all fields to join the garden.");
                 return;
             }
-            
-            int selectedGenderId = 3; 
+
+            int selectedGenderId = 3;
             if (MaleBtn.IsChecked == true) selectedGenderId = 2;
-                else if (FemaleBtn.IsChecked == true) selectedGenderId = 1;
-            
+            else if (FemaleBtn.IsChecked == true) selectedGenderId = 1;
+
             User newUser = new User
             {
                 Username = fullName,
                 Email = email,
-                Password = password, 
-
-
+                Password = password,
                 Gender = new Gender { Id = selectedGenderId, Name = "Default" }
             };
+
             DateTime? selectedDate = BirthdatePicker.SelectedDate;
 
             if (selectedDate.HasValue)
@@ -77,30 +73,14 @@ namespace Meetandgreet.Pages
                     return;
                 }
 
-                // Now you can save 'age' and 'birthday' to your User object
-                User. = birthday;
-                User.CurrentUser.Age = age;
+                // FIXED: Assign directly to your newUser object instance
+                newUser.DateOfBirth = birthday; // Verify if your model uses 'Birthdate' or 'Birthday'
+                newUser.Age = age;
+
+                // FIXED: Capitalized to match your 'Settingup2.xaml' layout styling if needed
                 NavigationService.Navigate(new Settingup(newUser));
-
-            //try
-            //{
-            //    Apiinter api = new Apiinter();
-            //    int result = await api.InsertAUser(newUser);
-
-            //    if (result == 1)
-            //    {
-            //        MessageBox.Show("Welcome! Your account has been created.");
-            //        NavigationService.Navigate(new Settingup()); 
-            //    }
-            //    else
-            //    {
-            //        MessageBox.Show("Signup failed. That email might already be registered.");
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show($"Error: {ex.Message}");
-            //}
+            }
         }
     }
 }
+
