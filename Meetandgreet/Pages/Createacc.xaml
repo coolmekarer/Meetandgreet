@@ -26,8 +26,16 @@
                     <TextBlock Text="Full Name" Foreground="White" FontSize="12" Margin="5,0,0,3"/>
                     <TextBox x:Name="NameInput" Height="35" Margin="0,0,0,12" Background="#33FFFFFF" Foreground="White" BorderThickness="1" BorderBrush="#66F7E7CE" VerticalContentAlignment="Center" Padding="10,0">
                         <TextBox.Resources>
-                            <Style TargetType="Border">
-                                <Setter Property="CornerRadius" Value="8"/>
+                            <Style TargetType="TextBox">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="TextBox">
+                                            <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" CornerRadius="8">
+                                                <ScrollViewer x:Name="PART_ContentHost"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
                             </Style>
                         </TextBox.Resources>
                     </TextBox>
@@ -35,8 +43,16 @@
                     <TextBlock Text="Email" Foreground="White" FontSize="12" Margin="5,0,0,3"/>
                     <TextBox x:Name="EmailInput" Height="35" Margin="0,0,0,12" Background="#33FFFFFF" Foreground="White" BorderThickness="1" BorderBrush="#66F7E7CE" VerticalContentAlignment="Center" Padding="10,0">
                         <TextBox.Resources>
-                            <Style TargetType="Border">
-                                <Setter Property="CornerRadius" Value="8"/>
+                            <Style TargetType="TextBox">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="TextBox">
+                                            <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" CornerRadius="8">
+                                                <ScrollViewer x:Name="PART_ContentHost"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
                             </Style>
                         </TextBox.Resources>
                     </TextBox>
@@ -54,19 +70,42 @@
                         <RadioButton x:Name="OtherBtn" Content="Non-Binary" Foreground="White"/>
                     </StackPanel>
 
+                    <TextBlock Text="City" Foreground="White" FontSize="12" Margin="5,0,0,3"/>
+                    <ComboBox x:Name="CityDropdown" Height="35" Margin="0,0,0,12" 
+                              Background="#33FFFFFF" Foreground="Black"
+                              DisplayMemberPath="Name" SelectedValuePath="Id"
+                              VerticalContentAlignment="Center" Padding="10,0">
+                    </ComboBox>
+
                     <TextBlock Text="Create Password" Foreground="White" FontSize="12" Margin="5,0,0,3"/>
                     <PasswordBox x:Name="PassInput" Height="35" Margin="0,0,0,20" Background="#33FFFFFF" Foreground="White" BorderThickness="1" BorderBrush="#66F7E7CE" VerticalContentAlignment="Center" Padding="10,0">
                         <PasswordBox.Resources>
-                            <Style TargetType="Border">
-                                <Setter Property="CornerRadius" Value="8"/>
+                            <Style TargetType="PasswordBox">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="PasswordBox">
+                                            <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" CornerRadius="8">
+                                                <ScrollViewer x:Name="PART_ContentHost"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
                             </Style>
                         </PasswordBox.Resources>
                     </PasswordBox>
 
                     <Button Content="GET STARTED" Click="SignUp_Click" Height="50" Background="#FF4D4D" Foreground="White" FontWeight="Bold" BorderThickness="0" Cursor="Hand">
                         <Button.Resources>
-                            <Style TargetType="Border">
-                                <Setter Property="CornerRadius" Value="25"/>
+                            <Style TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="{TemplateBinding Background}" CornerRadius="25">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
                             </Style>
                         </Button.Resources>
                     </Button>

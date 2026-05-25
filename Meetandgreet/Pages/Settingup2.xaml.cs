@@ -29,49 +29,68 @@ namespace Meetandgreet.Pages
             currentUser = usr;
         }
 
+        private void UploadPic_Click(object sender, RoutedEventArgs e)
+        {
+            // Open a standard Windows file Explorer selection box
+            Microsoft.Win32.OpenFileDialog fileDialog = new Microsoft.Win32.OpenFileDialog();
+            fileDialog.Filter = "Image files (*.png;*.jpeg;*.jpg)|*.png;*.jpeg;*.jpg|All files (*.*)|*.*";
+
+            if (fileDialog.ShowDialog() == true)
+            {
+                // 1. Save the local file directory path straight into your user object payload
+                currentUser.Profilepic = fileDialog.FileName;
+
+                // 2. Dynamically change the XAML profile circle to preview the chosen image instantly!
+                BitmapImage bitmap = new BitmapImage(new Uri(fileDialog.FileName));
+                ProfileImageBrush.ImageSource = bitmap;
+            }
+        }
         // Changed to 'async void' so we can await our background API call
         private async void Finish_Click(object sender, RoutedEventArgs e)
         {
-            // 1. Capture the biography text
-            currentUser.Bio = aboutMe.Text.Trim();
+            // 1. Gather text from the 'About Me' TextBox
+            currentUser.Bio = aboutMe.Text;
 
-            // 2. Determine gender preference ID based on selected RadioButton
-            // Assuming your backend setup uses a system like: 1 = Female, 2 = Male, 3 = Both/All
-            int selectedPrefGenderId = 3;
+            // 2. Clear out or instantiate the Preferences object if it's null
+            if (currentUser.Preferences == null)
+            {
+                currentUser.Preferences = new Preferences();
+            }
+
+            // Map the radio buttons to your gender preference settings
+            int selectedPrefGenderId = 3; // Default to Both
+            string selectedPrefGenderName = "Both";
+
             if (PrefMalesBtn.IsChecked == true)
             {
                 selectedPrefGenderId = 2;
+                selectedPrefGenderName = "Male";
             }
             else if (PrefFemalesBtn.IsChecked == true)
             {
                 selectedPrefGenderId = 1;
+                selectedPrefGenderName = "Female";
             }
 
-            // 3. Assign the preference object to your user profile
-            // Adjust this line to match your exact DB Preference object structure if needed
-            currentUser.PrefferedGender = new Gender { Id = selectedPrefGenderId, Name = "Preference" };
+            // Set your preferences properties normally
+            currentUser.Preferences.PreferredGender = new Gender { Id = selectedPrefGenderId, Name = selectedPrefGenderName };
 
-            // 4. Send the completely populated profile payload to the database via API
-            try
+            // --- PASTE THE FIX RIGHT HERE BEFORE SENDING ---
+            // 3. To pass API validation without looping, clear the circular object back-reference right before sending
+            currentUser.Preferences.User = null;
+
+            // 4. Fire the request safely across the Dev Tunnel!
+            bool isSuccess = await ApiService.RegisterUserAsync(currentUser);
+
+            if (isSuccess)
             {
-                // This utilizes your static registration method inside ApiService.cs!
-                bool isSuccess = await ApiService.RegisterUserAsync(currentUser);
-
-                if (isSuccess)
-                {
-                    MessageBox.Show("Welcome to the garden! Your profile is set up.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                    // Navigate to your main application board
-                    NavigationService.Navigate(new Homepage(currentUser));
-                }
-                else
-                {
-                    MessageBox.Show("We couldn't finalize your registration. Please verify your internet link or try an alternate email.", "Registration Failed", MessageBoxButton.OK, MessageBoxImage.Warning);
-                }
+                MessageBox.Show("Registration successful!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                // You can uncomment your navigation code here to go to the main feed/dashboard!
+                 NavigationService.Navigate(new Homepage(currentUser));
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show($"Database Connection Error: {ex.Message}", "API Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("We couldn't finalize your registration. Please verify your internet link or try an alternate email.", "Registration Failed", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
     }

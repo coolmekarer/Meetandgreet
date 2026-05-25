@@ -39,15 +39,23 @@ namespace Meetandgreet.Pages
 
             if (MinAge > MaxAge)
             {
-                MessageBox.Show("Minimum age preference cannot be older than maximum age preference.");
+                MessageBox.Show("Minimum age preference cannot be greater than maximum age.");
                 return;
             }
 
-            // Assigning directly to your separate preferences class inside the user!
-            _newUser.Preferences.MinAge = MinAge;
-            _newUser.Preferences.MaxAge = MaxAge;
-            _newUser.Preferences.MaxDistanceKM = maxDistanceKm; // Match your exact preference property names
+            // --- ADD THIS CRITICAL FIX HERE ---
+            // If the preferences package doesn't exist yet, build a new empty container for it!
+            if (_newUser.Preferences == null)
+            {
+                _newUser.Preferences = new Preferences();
+            }
 
+            // Now C# can safely store these numbers without throwing a Null exception!
+            _newUser.Preferences.AgeMin = MinAge;
+            _newUser.Preferences.AgeMax = MaxAge;
+            _newUser.Preferences.DistanceMax = maxDistanceKm; // Sync this if needed!
+
+            // Navigate to step 2 safely
             NavigationService.Navigate(new Settingup2(_newUser));
         }
     }

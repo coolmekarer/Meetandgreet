@@ -14,8 +14,8 @@
 
         <Viewbox Stretch="Uniform" MaxHeight="850">
             <Border VerticalAlignment="Center" HorizontalAlignment="Center" 
-                Width="450" Padding="35" CornerRadius="30"
-                Background="#CC1A1A1A" BorderBrush="#33FFFFFF" BorderThickness="1">
+            Width="450" Padding="35" CornerRadius="30"
+            Background="#CC1A1A1A" BorderBrush="#33FFFFFF" BorderThickness="1">
                 <StackPanel>
                     <TextBlock Text="Step 2" Foreground="White" FontSize="32" FontWeight="Bold" HorizontalAlignment="Center"/>
                     <TextBlock Text="meet and greet wants to get to know you..." Foreground="#F7E7CE" FontSize="14" HorizontalAlignment="Center" Margin="0,5,0,25"/>
@@ -23,42 +23,67 @@
                     <Grid HorizontalAlignment="Center" Margin="0,0,0,20">
                         <Ellipse Width="110" Height="110" Stroke="#F7E7CE" StrokeThickness="2" StrokeDashArray="4 2">
                             <Ellipse.Fill>
-                                <ImageBrush ImageSource="/Images/defaultprofile.png" Stretch="UniformToFill"/>
+                                <ImageBrush x:Name="ProfileImageBrush" ImageSource="/Images/defaultprofile.png" Stretch="UniformToFill"/>
                             </Ellipse.Fill>
                         </Ellipse>
+
                         <Button Content="+" Width="30" Height="30" VerticalAlignment="Bottom" HorizontalAlignment="Right"
-                            Background="#FF4D4D" Foreground="White" BorderThickness="0">
+            Background="#FF4D4D" Foreground="White" BorderThickness="0" Click="UploadPic_Click" Cursor="Hand">
                             <Button.Resources>
-                                <Style TargetType="Border">
-                                    <Setter Property="CornerRadius" Value="15"/>
+                                <Style TargetType="Button">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="15">
+                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
                                 </Style>
                             </Button.Resources>
                         </Button>
                     </Grid>
 
                     <TextBlock Text="About Me" Foreground="White" FontSize="12" Margin="5,0,0,5"/>
+
                     <TextBox x:Name="aboutMe" Height="100" Margin="0,0,0,20" TextWrapping="Wrap" AcceptsReturn="True"
-                         Background="#33FFFFFF" Foreground="White" BorderBrush="#66F7E7CE" Padding="10">
+                     Background="#33FFFFFF" Foreground="White" BorderBrush="#66F7E7CE" Padding="10">
                         <TextBox.Resources>
-                            <Style TargetType="Border">
-                                <Setter Property="CornerRadius" Value="10"/>
+                            <Style TargetType="TextBox">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="TextBox">
+                                            <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" CornerRadius="10">
+                                                <ScrollViewer x:Name="PART_ContentHost"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
                             </Style>
                         </TextBox.Resources>
                     </TextBox>
 
                     <TextBlock Text="Interested in..." Foreground="White" FontSize="12" Margin="5,0,0,8"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,30">
-                        <!-- ADDED NAMES HERE -->
                         <RadioButton x:Name="PrefMalesBtn" Content="Males" Foreground="White" Margin="0,0,15,0"/>
                         <RadioButton x:Name="PrefFemalesBtn" Content="Females" Foreground="White" Margin="0,0,15,0"/>
                         <RadioButton x:Name="PrefBothBtn" Content="Both" Foreground="White" IsChecked="True"/>
                     </StackPanel>
 
                     <Button Content="FINISH SETUP" Height="55" Background="#FF4D4D" Foreground="White" 
-                        FontWeight="Bold" BorderThickness="0" Cursor="Hand" Click="Finish_Click">
+                    FontWeight="Bold" BorderThickness="0" Cursor="Hand" Click="Finish_Click">
                         <Button.Resources>
-                            <Style TargetType="Border">
-                                <Setter Property="CornerRadius" Value="27"/>
+                            <Style TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="{TemplateBinding Background}" CornerRadius="27">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
                             </Style>
                         </Button.Resources>
                     </Button>

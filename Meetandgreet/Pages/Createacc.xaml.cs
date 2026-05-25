@@ -17,14 +17,32 @@ using System.Windows.Shapes;
 
 namespace Meetandgreet.Pages
 {
-    /// <summary>
-    /// Interaction logic for Createacc.xaml
-    /// </summary>
     public partial class Createacc : Page
     {
         public Createacc()
         {
             InitializeComponent();
+            LoadCities(); // Async loader trigger
+        }
+
+        // Fetch city options from your active Dev Tunnel endpoint
+        private async void LoadCities()
+        {
+            try
+            {
+                // This targets the endpoint listed on your Swagger page
+                List<City> citiesList = await ApiService.GetCitiesAsync();
+
+                if (citiesList != null && citiesList.Count > 0)
+                {
+                    CityDropdown.ItemsSource = citiesList;
+                    CityDropdown.SelectedIndex = 0; // Default to first item
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Could not load cities list: " + ex.Message);
+            }
         }
 
         private void Back_Click(object sender, RoutedEventArgs e)
@@ -37,11 +55,18 @@ namespace Meetandgreet.Pages
             string fullName = NameInput.Text.Trim();
             string email = EmailInput.Text.Trim();
             string password = PassInput.Password;
+            City selectedCity = CityDropdown.SelectedItem as City;
 
-            // Validation
+            // Form validations
             if (string.IsNullOrEmpty(fullName) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
             {
                 MessageBox.Show("Please fill out all fields to join the garden.");
+                return;
+            }
+
+            if (selectedCity == null)
+            {
+                MessageBox.Show("Please select your city location.");
                 return;
             }
 
@@ -54,7 +79,9 @@ namespace Meetandgreet.Pages
                 Username = fullName,
                 Email = email,
                 Password = password,
-                Gender = new Gender { Id = selectedGenderId, Name = "Default" }
+                Gender = new Gender { Id = selectedGenderId, Name = "Default" },
+                City = selectedCity, // ATTACHED VALID LOCATION ENTITY HERE!
+                CreatedAt = DateTime.Now
             };
 
             DateTime? selectedDate = BirthdatePicker.SelectedDate;
@@ -64,7 +91,6 @@ namespace Meetandgreet.Pages
                 DateTime birthday = selectedDate.Value;
                 int age = DateTime.Today.Year - birthday.Year;
 
-                // Adjust for leap years/months
                 if (birthday > DateTime.Today.AddYears(-age)) age--;
 
                 if (age < 18)
@@ -73,12 +99,15 @@ namespace Meetandgreet.Pages
                     return;
                 }
 
-                // FIXED: Assign directly to your newUser object instance
-                newUser.DateOfBirth = birthday; // Verify if your model uses 'Birthdate' or 'Birthday'
+                newUser.DateOfBirth = birthday;
                 newUser.Age = age;
 
-                // FIXED: Capitalized to match your 'Settingup2.xaml' layout styling if needed
+                // Move forward with the populated user data
                 NavigationService.Navigate(new Settingup(newUser));
+            }
+            else
+            {
+                MessageBox.Show("Please select a valid birthdate.");
             }
         }
     }

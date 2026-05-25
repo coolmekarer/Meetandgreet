@@ -9,11 +9,30 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<None Remove="Images\adamandeve1.jpg" />
+		<None Remove="Images\apples.png" />
+		<None Remove="Images\cupids.jpg" />
+		<None Remove="Images\defaultprofile.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Reference Include="ModelDates">
+			<HintPath>..\..\datingappmodel4\DatesApi\bin\Debug\net8.0\ModelDates.dll</HintPath>
+		</Reference>
+		<Reference Include="ViewModel">
+			<HintPath>..\..\datingappmodel4\DatesApi\bin\Debug\net8.0\ViewModel.dll</HintPath>
+		</Reference>
 	</ItemGroup>
 
 	<ItemGroup>
 		<Resource Include="Images\adamandeve1.jpg" />
+		<Resource Include="Images\apples.png" />
+		<Resource Include="Images\cupids.jpg" />
+		<Resource Include="Images\defaultprofile.png" />
 	</ItemGroup>
 
 </Project>
