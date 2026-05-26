@@ -25,8 +25,9 @@
         <TextBlock x:Name="BioTxt" TextAlignment="Center" Foreground="#DDFFFFFF" 
                    Margin="0,20,0,0" TextWrapping="Wrap" FontSize="16"/>
 
-        <Button Content="Edit Profile" Margin="0,30,0,0" Background="#FF4D4D" Foreground="White" 
-                Padding="10" />
+        <Button x:Name="EditProfileBtn" Content="Edit Profile" Margin="0,30,0,0" 
+        Background="#FF4D4D" Foreground="White" Padding="10" 
+        Click="EditProfileBtn_Click" />
         <StackPanel Margin="40" MaxWidth="500">
             <TextBlock Text="Choose Background Color:" Foreground="White" Margin="0,20,0,5"/>
             <ComboBox x:Name="ColorPicker" SelectionChanged="ColorPicker_SelectionChanged" Width="200" HorizontalAlignment="Left">
