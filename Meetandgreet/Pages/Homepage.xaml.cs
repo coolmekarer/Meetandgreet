@@ -205,10 +205,14 @@ namespace Meetandgreet.Pages
 
         private void ProfileNav_Click(object sender, RoutedEventArgs e)
         {
+            // Create an instance of the profile page and pass the ID
+            Profile profilePage = new Profile(currentUser.Id);
+            NavigationService.Navigate(profilePage);
         }
 
         private void ChatsNav_Click(object sender, RoutedEventArgs e)
         {
+            NavigationService.Navigate(new Matcheslist(currentUser));
         }
     }
 }

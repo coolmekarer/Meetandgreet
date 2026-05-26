@@ -17,6 +17,9 @@
 		<None Remove="Images\apples.png" />
 		<None Remove="Images\cupids.jpg" />
 		<None Remove="Images\defaultprofile.png" />
+		<None Remove="Images\glassbg.jpg" />
+		<None Remove="Images\moreangelbg.jpg" />
+		<None Remove="Images\paintingbg.jpg" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -33,6 +36,9 @@
 		<Resource Include="Images\apples.png" />
 		<Resource Include="Images\cupids.jpg" />
 		<Resource Include="Images\defaultprofile.png" />
+		<Resource Include="Images\glassbg.jpg" />
+		<Resource Include="Images\moreangelbg.jpg" />
+		<Resource Include="Images\paintingbg.jpg" />
 	</ItemGroup>
 
 </Project>

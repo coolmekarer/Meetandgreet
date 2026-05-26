@@ -32,6 +32,21 @@ namespace Meetandgreet
             }
         }
 
+        public static async Task<User> GetUserByIdAsync(int userId)
+        {
+            try
+            {
+                // This must match the route in your Controller exactly
+                string url = $"api/Dates/GetUser/GetUser/{userId}";
+
+                return await _httpClient.GetFromJsonAsync<User>(url);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error fetching user: {ex.Message}");
+                return null;
+            }
+        }
         public static async Task<bool> RegisterUserAsync(User user)
         {
             var response = await _httpClient.PostAsJsonAsync("api/Dates/InsertAUser", user);
@@ -45,6 +60,20 @@ namespace Meetandgreet
 
             return response.IsSuccessStatusCode;
         }
+
+        public static async Task<bool> DeleteUserAsync(int userId)
+        {
+            try
+            {
+                // Make sure this route matches your Delete endpoint in your Controller
+                var response = await _httpClient.DeleteAsync($"api/Dates/DeleteUser/DeleteUser/{userId}");
+                return response.IsSuccessStatusCode;
+            }
+            catch
+            {
+                return false;
+            }
+        }
         public static async Task<List<City>> GetCitiesAsync()
         {
             try
@@ -55,14 +84,14 @@ namespace Meetandgreet
             {
                 return new List<City>();
             }
-        }
+        } 
 
         public static async Task<Preferences> GetPreferencesByUserIdAsync(int userId)
         {
             try
             {
-                // 1. Log exactly what we are asking for
-                string url = $"api/Dates/PreferencesSelector?userId={userId}";
+                // 1. Updated to match the doubled path: api/Dates/PreferencesSelector/PreferencesSelector
+                string url = $"api/Dates/PreferencesSelector/PreferencesSelector?userId={userId}";
                 System.Diagnostics.Debug.WriteLine($"Fetching Preferences from: {url}");
 
                 // 2. Use a direct request
@@ -153,6 +182,70 @@ namespace Meetandgreet
         {
             public bool matchFound { get; set; }
         }
-    }
+
+        public static async Task<List<Matches>> GetMatchesForUserAsync(int userId)
+        {
+            try
+            {
+                // Swagger shows the route is doubled: "api/Dates/GetMatchesForUser/GetMatchesForUser/{userId}"
+                string url = $"api/Dates/GetMatchesForUser/GetMatchesForUser/{userId}";
+
+                System.Diagnostics.Debug.WriteLine($"Fetching Matches from: {url}");
+
+                var response = await _httpClient.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<List<Matches>>();
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine($"Failed to fetch matches. Status: {response.StatusCode}");
+                    return new List<Matches>();
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error in GetMatchesForUserAsync: {ex.Message}");
+                return new List<Matches>();
+            }
+        }
+
+        public static async Task<List<Messages>> GetMessagesByMatchIdAsync(int matchId)
+        {
+            try
+            {
+                // Updated URL to match the doubled route pattern: api/Dates/GetMessages/GetMessages/{matchId}
+                string url = $"api/Dates/GetMessages/GetMessages/{matchId}";
+
+                System.Diagnostics.Debug.WriteLine($"Fetching Messages from: {url}");
+
+                return await _httpClient.GetFromJsonAsync<List<Messages>>(url);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error fetching messages: {ex.Message}");
+                return new List<Messages>();
+            }
+        }
+
+        public static async Task<bool> SendMessageAsync(Messages msg)
+        {
+            try
+            {
+                // Must match the doubled route pattern: api/Dates/SendMessage/SendMessage
+                string url = "api/Dates/SendMessage/SendMessage";
+
+                var response = await _httpClient.PostAsJsonAsync(url, msg);
+
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error sending message: {ex.Message}");
+                return false;
+            }
+        }
+    } 
 }
 
