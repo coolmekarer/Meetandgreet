@@ -90,8 +90,8 @@ namespace Meetandgreet
         {
             try
             {
-                // 1. Updated to match the doubled path: api/Dates/PreferencesSelector/PreferencesSelector
-                string url = $"api/Dates/PreferencesSelector/PreferencesSelector?userId={userId}";
+                // 1. Updated to match the doubled path: api/Dates/PreferencesSelector/5
+                string url = $"api/Dates/PreferencesSelector/{userId}";
                 System.Diagnostics.Debug.WriteLine($"Fetching Preferences from: {url}");
 
                 // 2. Use a direct request
@@ -117,26 +117,31 @@ namespace Meetandgreet
 
         public static async Task<List<User>> GetDiscoveryFeedAsync(User currentUser, Preferences prefs)
         {
-            if (prefs == null) return new List<User>();
+            if (currentUser == null || prefs == null)
+            {
+                return new List<User>();
+            }
+
+            var options = new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = null // This forces C# to keep PascalCase (UserId, Preferences)
+            };
 
             try
             {
-                string url = $"api/Dates/GetDiscoveryFeed" +
-                             $"?currentUserId={currentUser.Id}" +
-                             $"&preferredGenderId={prefs.PreferredGender.Id}" +
-                             $"&minAge={prefs.AgeMin}" +
-                             $"&maxAge={prefs.AgeMax}" +
-                             $"&maxDistance={prefs.DistanceMax}";
+                var payload = new DiscoveryFeedDTO
+                {
+                    UserId = currentUser.Id,
+                    Preferences = prefs
+                };
 
-                // ADDED: Print the EXACT URL to the Output window
-                System.Diagnostics.Debug.WriteLine("--- SENDING API REQUEST ---");
-                System.Diagnostics.Debug.WriteLine("URL: " + url);
-
-                var response = await _httpClient.GetAsync(url);
+                // Send the POST request
+                var response = await _httpClient.PostAsJsonAsync("api/Dates/GetDiscoveryFeed", payload, options);
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    System.Diagnostics.Debug.WriteLine($"API Error: {response.StatusCode}");
+                    string errorContent = await response.Content.ReadAsStringAsync();
+                    System.Diagnostics.Debug.WriteLine($"API Error: {response.StatusCode} - {errorContent}");
                     return new List<User>();
                 }
 

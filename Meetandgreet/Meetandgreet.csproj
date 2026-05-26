@@ -23,12 +23,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Reference Include="ModelDates">
-			<HintPath>..\..\datingappmodel4\DatesApi\bin\Debug\net8.0\ModelDates.dll</HintPath>
-		</Reference>
-		<Reference Include="ViewModel">
-			<HintPath>..\..\datingappmodel4\DatesApi\bin\Debug\net8.0\ViewModel.dll</HintPath>
-		</Reference>
+	  <Reference Include="DatesApi">
+	    <HintPath>..\..\datingappmodel1\interfaceapi\bin\Debug\net8.0\DatesApi.dll</HintPath>
+	  </Reference>
+	  <Reference Include="ModelDates">
+	    <HintPath>..\..\datingappmodel1\ModelDates\bin\Debug\net8.0\ModelDates.dll</HintPath>
+	  </Reference>
+	  <Reference Include="ViewModel">
+	    <HintPath>..\..\datingappmodel1\interfaceapi\bin\Debug\net8.0\ViewModel.dll</HintPath>
+	  </Reference>
 	</ItemGroup>
 
 	<ItemGroup>
