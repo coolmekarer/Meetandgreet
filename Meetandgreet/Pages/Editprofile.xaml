@@ -9,14 +9,25 @@
       Title="Editprofile">
 
     <Grid>
-        <StackPanel Margin="40">
+        <StackPanel Margin="40" MaxWidth="500">
+            <Grid HorizontalAlignment="Center" Margin="0,0,0,20">
+                <Ellipse Width="110" Height="110" Stroke="#F7E7CE" StrokeThickness="2" StrokeDashArray="4 2">
+                    <Ellipse.Fill>
+                        <ImageBrush x:Name="ProfileImageBrush" ImageSource="/Images/defaultprofile.png" Stretch="UniformToFill"/>
+                    </Ellipse.Fill>
+                </Ellipse>
+
+                <Button Content="+" Width="30" Height="30" VerticalAlignment="Bottom" HorizontalAlignment="Right"
+                Background="#FF4D4D" Foreground="White" BorderThickness="0" Click="UploadPic_Click" Cursor="Hand">
+                    <Button.Resources>
+                    </Button.Resources>
+                </Button>
+            </Grid>
+
             <TextBlock Text="Edit Bio:" Foreground="White"/>
             <TextBox x:Name="BioInput" Height="100" AcceptsReturn="True" TextWrapping="Wrap"/>
 
-            <TextBlock Text="Profile Pic URL:" Foreground="White" Margin="0,20,0,0"/>
-            <TextBox x:Name="PhotoInput"/>
-
-            <Button Content="Save Changes" Click="SaveBtn_Click" Margin="0,20,0,0"/>
+            <Button Content="Save Changes" Click="SaveBtn_Click" Background="#FF4D4D" Foreground="White" Margin="0,20,0,0"/>
         </StackPanel>
     </Grid>
 </Page>
