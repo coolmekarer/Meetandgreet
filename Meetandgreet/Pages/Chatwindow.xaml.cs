@@ -55,11 +55,15 @@ namespace Meetandgreet.Pages
 
             Messages newMessage = new Messages
             {
-                MatchId = _currentMatch.Id,   // Use the ID
-                SenderId = _currentUser.Id,   // Use the ID
+                MatchID = _currentMatch.Id,
+                SenderID = _currentUser.Id,
                 MessageText = MessageInput.Text,
                 SentAt = DateTime.UtcNow
             };
+
+            // --- PASTE IT RIGHT HERE ---
+            System.Diagnostics.Debug.WriteLine($"Sending Message: MatchId={newMessage.MatchID}, Text={newMessage.MessageText}");
+            // ---------------------------
 
             bool success = await ApiService.SendMessageAsync(newMessage);
             if (success)

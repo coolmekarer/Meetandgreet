@@ -21,9 +21,9 @@ namespace Meetandgreet.Pages
     /// </summary>
     public partial class Settingup2 : Page
     {
-        private User currentUser;
+        private Preferences currentUser;
 
-        public Settingup2(User usr)
+        public Settingup2(Preferences usr)
         {
             InitializeComponent();
             currentUser = usr;
@@ -38,7 +38,7 @@ namespace Meetandgreet.Pages
             if (fileDialog.ShowDialog() == true)
             {
                 // 1. Save the local file directory path straight into your user object payload
-                currentUser.Profilepic = fileDialog.FileName;
+                currentUser.ProfilePic = fileDialog.FileName;
 
                 // 2. Dynamically change the XAML profile circle to preview the chosen image instantly!
                 BitmapImage bitmap = new BitmapImage(new Uri(fileDialog.FileName));
@@ -52,15 +52,16 @@ namespace Meetandgreet.Pages
             currentUser.Bio = aboutMe.Text;
 
             // 2. Clear out or instantiate the Preferences object if it's null
-            if (currentUser.Preferences == null)
+            if (currentUser == null)
             {
-                currentUser.Preferences = new Preferences();
+                currentUser = new Preferences();
             }
 
             // Map the radio buttons to your gender preference settings
             int selectedPrefGenderId = 3; // Default to Both
             string selectedPrefGenderName = "Both";
 
+        
             if (PrefMalesBtn.IsChecked == true)
             {
                 selectedPrefGenderId = 2;
@@ -71,13 +72,23 @@ namespace Meetandgreet.Pages
                 selectedPrefGenderId = 1;
                 selectedPrefGenderName = "Female";
             }
+            Gender? preferGender = (await ApiService.GetGenderListIdAsync()).Find(x => x.Id == selectedPrefGenderId);
+
+            Preferences currPreference = new Preferences() { AgeMax = currentUser.AgeMax, AgeMin = currentUser.AgeMin, DistanceMax = currentUser.DistanceMax, PreferredGender= preferGender, Age= currentUser.Age,
+             Bio=currentUser.Bio, City=currentUser.City, CreatedAt=currentUser.CreatedAt, DateOfBirth=currentUser.DateOfBirth,
+             Email=currentUser.Email, Gender=currentUser.Gender, Password=currentUser.Password, ProfilePic=currentUser.ProfilePic,
+             Username=currentUser.Username};
+            await ApiService.InsertPreferencesAsync(currPreference);
 
             // Set your preferences properties normally
-            currentUser.Preferences.PreferredGender = new Gender { Id = selectedPrefGenderId, Name = selectedPrefGenderName };
+
+
+            currentUser.PreferredGender = preferGender;
 
             // --- PASTE THE FIX RIGHT HERE BEFORE SENDING ---
             // 3. To pass API validation without looping, clear the circular object back-reference right before sending
-            currentUser.Preferences.User = null;
+            //currentUser.Preferences.User =  currentUser;
+;
 
             // 4. Fire the request safely across the Dev Tunnel!
             bool isSuccess = await ApiService.RegisterUserAsync(currentUser);

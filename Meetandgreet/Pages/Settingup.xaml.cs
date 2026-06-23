@@ -22,10 +22,10 @@ namespace Meetandgreet.Pages
     public partial class Settingup : Page
     {
         // This will temporarily store the user object passed from Createacc
-        private User _newUser;
+        private Preferences _newUser;
 
         // FIXED: The constructor now takes the 'User' object directly from Createacc page
-        public Settingup(User userFromSignup)
+        public Settingup(Preferences userFromSignup)
         {
             InitializeComponent();
             _newUser = userFromSignup;
@@ -45,15 +45,15 @@ namespace Meetandgreet.Pages
 
             // --- ADD THIS CRITICAL FIX HERE ---
             // If the preferences package doesn't exist yet, build a new empty container for it!
-            if (_newUser.Preferences == null)
+            if (_newUser == null)
             {
-                _newUser.Preferences = new Preferences();
+                _newUser = new Preferences();
             }
 
             // Now C# can safely store these numbers without throwing a Null exception!
-            _newUser.Preferences.AgeMin = MinAge;
-            _newUser.Preferences.AgeMax = MaxAge;
-            _newUser.Preferences.DistanceMax = maxDistanceKm; // Sync this if needed!
+            _newUser.AgeMin = MinAge;
+            _newUser.AgeMax = MaxAge;
+            _newUser.DistanceMax = maxDistanceKm; // Sync this if needed!
 
             // Navigate to step 2 safely
             NavigationService.Navigate(new Settingup2(_newUser));

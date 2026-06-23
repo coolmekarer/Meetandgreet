@@ -1,24 +1,11 @@
 ﻿using ModelDates;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Meetandgreet.Pages
 {
-    /// <summary>
-    /// Interaction logic for Matcheslist.xaml
-    /// </summary>
     public partial class Matcheslist : Page
     {
         private User _currentUser;
@@ -27,30 +14,42 @@ namespace Meetandgreet.Pages
         {
             InitializeComponent();
             _currentUser = currentUser;
+            this.Loaded += Matcheslist_Loaded;
+        }
+
+        private void Matcheslist_Loaded(object sender, RoutedEventArgs e)
+        {
             LoadMatches();
         }
 
         private async void LoadMatches()
         {
-            // Fetch matches from API
             var matches = await ApiService.GetMatchesForUserAsync(_currentUser.Id);
-            MatchesListBox.ItemsSource = matches;
+
+            // This creates the 'DisplayName' for the UI
+            var displayList = matches.Select(m => new {
+                OriginalMatch = m,
+                DisplayName = m.GetOtherUser(_currentUser.Id)?.Username ?? "Unknown"
+            }).ToList();
+
+            MatchesListBox.ItemsSource = displayList;
         }
+
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
-            if (NavigationService.CanGoBack)
-            {
-                NavigationService.GoBack();
-            }
+            if (NavigationService.CanGoBack) NavigationService.GoBack();
         }
 
         private void MatchesListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (MatchesListBox.SelectedItem is Matches selectedMatch)
+            if (MatchesListBox.SelectedItem != null)
             {
-                // Navigate to the Chat window passing the selected match
+                dynamic selectedItem = MatchesListBox.SelectedItem;
+                Matches selectedMatch = selectedItem.OriginalMatch;
+
                 NavigationService.Navigate(new Chatwindow(selectedMatch, _currentUser));
+                MatchesListBox.SelectedItem = null;
             }
-        } 
+        }
     }
 }

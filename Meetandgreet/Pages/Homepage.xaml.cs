@@ -70,9 +70,9 @@ namespace Meetandgreet.Pages
             _currentPhotoIndex = 0;
 
             // Safety check: Make sure we handle relative or missing image strings safely
-            if (!string.IsNullOrEmpty(displayedUser.Profilepic) && displayedUser.Profilepic.StartsWith("/Images"))
+            if (!string.IsNullOrEmpty(displayedUser.ProfilePic) && displayedUser.ProfilePic.StartsWith("/Images"))
             {
-                _currentProfileGallery.Add(displayedUser.Profilepic);
+                _currentProfileGallery.Add(displayedUser.ProfilePic);
             }
             else
             {

@@ -17,6 +17,7 @@
 		<None Remove="Images\apples.png" />
 		<None Remove="Images\cupids.jpg" />
 		<None Remove="Images\defaultprofile.png" />
+		<None Remove="Images\editpro.jpg" />
 		<None Remove="Images\glassbg.jpg" />
 		<None Remove="Images\moreangelbg.jpg" />
 		<None Remove="Images\paintingbg.jpg" />
@@ -24,13 +25,13 @@
 
 	<ItemGroup>
 	  <Reference Include="DatesApi">
-	    <HintPath>..\..\datingappmodel4\DatesApi\bin\Debug\net8.0\DatesApi.dll</HintPath>
+	    <HintPath>..\..\datingappmodel5\DatesApi\bin\Debug\net8.0\DatesApi.dll</HintPath>
 	  </Reference>
 	  <Reference Include="ModelDates">
-	    <HintPath>..\..\datingappmodel4\DatesApi\bin\Debug\net8.0\ModelDates.dll</HintPath>
+	    <HintPath>..\..\datingappmodel5\DatesApi\bin\Debug\net8.0\ModelDates.dll</HintPath>
 	  </Reference>
 	  <Reference Include="ViewModel">
-	    <HintPath>..\..\datingappmodel4\DatesApi\bin\Debug\net8.0\ViewModel.dll</HintPath>
+	    <HintPath>..\..\datingappmodel5\DatesApi\bin\Debug\net8.0\ViewModel.dll</HintPath>
 	  </Reference>
 	</ItemGroup>
 
@@ -39,6 +40,7 @@
 		<Resource Include="Images\apples.png" />
 		<Resource Include="Images\cupids.jpg" />
 		<Resource Include="Images\defaultprofile.png" />
+		<Resource Include="Images\editpro.jpg" />
 		<Resource Include="Images\glassbg.jpg" />
 		<Resource Include="Images\moreangelbg.jpg" />
 		<Resource Include="Images\paintingbg.jpg" />

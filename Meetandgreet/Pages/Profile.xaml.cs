@@ -1,8 +1,9 @@
-﻿using System;
+﻿using ModelDates; // Ensure this matches your project's namespace
+using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using ModelDates; // Ensure this matches your project's namespace
 
 namespace Meetandgreet.Pages
 {
@@ -23,16 +24,28 @@ namespace Meetandgreet.Pages
         {
             try
             {
-                // This assumes your ApiService has a method to get a user by ID
                 var user = await ApiService.GetUserByIdAsync(_userId);
 
                 if (user != null)
                 {
+                    currentUser = user;
+
                     UsernameTxt.Text = user.Username;
                     AgeTxt.Text = user.Age.ToString();
                     BioTxt.Text = user.Bio;
-                    // If you have a photo URL, you would set it here:
-                    // ProfilePhoto.Source = new BitmapImage(new Uri(user.PhotoUrl));
+
+                    // ADD THIS PART:
+                    if (!string.IsNullOrEmpty(user.ProfilePic) && System.IO.File.Exists(user.ProfilePic))
+                    {
+                        var bitmap = new BitmapImage();
+                        bitmap.BeginInit();
+                        bitmap.UriSource = new Uri(user.ProfilePic);
+                        bitmap.CacheOption = BitmapCacheOption.OnLoad; // Force reload
+                        bitmap.EndInit();
+
+                        // Replace 'ProfileImage' with the x:Name of your Image control in XAML
+                        ProfilePhoto.Source = bitmap;
+                    }
                 }
             }
             catch (Exception ex)
@@ -92,5 +105,9 @@ namespace Meetandgreet.Pages
             }
         }
 
+        private void EditProfileBtn_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Editprofile(currentUser));
+        }
     }
 }

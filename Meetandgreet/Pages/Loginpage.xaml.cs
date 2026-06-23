@@ -1,5 +1,7 @@
-﻿using System;
+﻿using ModelDates;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,7 +14,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using ModelDates;
 
 
 namespace Meetandgreet.Pages
@@ -34,36 +35,41 @@ namespace Meetandgreet.Pages
             NavigationService.GoBack();
         }
 
-      
+
 
         private async void CheckLogIn_Click(object sender, RoutedEventArgs e)
         {
             string email = EmailInput.Text;
             string password = PasswordInput.Password;
 
-            // 1. Check if inputs are empty
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
-            {
-                MessageBox.Show("Please enter both username and password.");
-                return; // Stop here if empty
-            }
-
-            // 2. Get the list from your API
-            // Note: Make sure GetAllUser() exists in ApiService.cs and returns a List<User>
             var userList = await ApiService.GetAllUser();
+            var user = userList.FirstOrDefault(x => x.Email == email);
 
-            // 3. Find the user (Fixed the lambda syntax here)
-            var user = userList.FirstOrDefault(x => x.Email == email && x.Password == password);
-
-            // 4. Check if the user was found
             if (user == null)
             {
-                MessageBox.Show("Invalid username or password.");
+                MessageBox.Show("Email not found.");
+                return;
+            }
+
+            // 1. Check if the password typed IS the Manager Password
+            bool isManager = await ApiService.VerifyManagerPasswordAsync(user.Id, password);
+            Debug.WriteLine($"Manager Check Result for user {user.Id}: {isManager}"); // <--- ADD THIS
+
+            if (isManager)
+            {
+                user.IsManager = true;
+                MessageBox.Show("Logged in as Manager.");
+                NavigationService.Navigate(new ManagerHomepage(user));
+            }
+            // 2. Check if the password typed IS the User Password
+            else if (user.Password == password)
+            {
+                user.IsManager = false;
+                NavigationService.Navigate(new Homepage(user));
             }
             else
             {
-
-                NavigationService.Navigate(new Homepage(user));
+                MessageBox.Show("Incorrect password.");
             }
         }
     }

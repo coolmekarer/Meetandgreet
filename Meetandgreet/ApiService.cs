@@ -1,256 +1,196 @@
 ﻿using ModelDates;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-    using System.Net.Http;
-    using System.Net.Http.Json;
-// Makes sending/receiving JSON easy
-using System.Text.Json;
-using System.Text;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
+
 namespace Meetandgreet
 {
-    public class ApiService
+    public static class ApiService
     {
         private static readonly HttpClient _httpClient = new HttpClient
         {
-            // FIX: Pointed directly to your active VS Dev Tunnel address
-            BaseAddress = new Uri("https://fdgrrqj8-5105.euw.devtunnels.ms/")
+            BaseAddress = new Uri("https://krpx2rgs-5105.uks1.devtunnels.ms/")
         };
 
-        // This makes the method accessible to your LoginPage
+        // --- User Methods ---
         public static async Task<List<User>> GetAllUser()
         {
-            try
-            {
-                // Update this string to match your API's "Get All" endpoint
-                return await _httpClient.GetFromJsonAsync<List<User>>("api/Dates/UserSelector");
-            }
-            catch
-            {
-                return new List<User>(); // Returns empty list if API is down
-            }
+            try { return await _httpClient.GetFromJsonAsync<List<User>>("api/Dates/UserSelector"); }
+            catch { return new List<User>(); }
         }
 
         public static async Task<User> GetUserByIdAsync(int userId)
         {
+            try { return await _httpClient.GetFromJsonAsync<User>($"api/Dates/GetUser/GetUser/{userId}"); }
+            catch { return null; }
+        }
+
+        public static async Task<bool> RegisterUserAsync(User user)
+        {
             try
             {
-                // This must match the route in your Controller exactly
-                string url = $"api/Dates/GetUser/GetUser/{userId}";
+                var response = await _httpClient.PostAsJsonAsync("api/Dates/InsertAUser", user);
+                return response.IsSuccessStatusCode;
+            }
+            catch { return false; }
+        }
+        public static async Task<bool> InsertPreferencesAsync(Preferences p)
+        {
+            try
+            {
+                var response = await _httpClient.PostAsJsonAsync("api/Dates/InsertAPreferences", p);
+                return response.IsSuccessStatusCode;
+            }
+            catch { return false; }
+        }
 
-                return await _httpClient.GetFromJsonAsync<User>(url);
+        // THIS IS THE METHOD YOU WERE MISSING IN EDITPROFILE:
+        public static async Task<string> UpdateUserAsync(User user)
+        {
+            try
+            {
+                // 1. Create an anonymous object that matches the structure of your UserUpdateDTO
+                var updateDto = new
+                {
+                    Id = user.Id,
+                    Bio = user.Bio,
+                    Profilepic = user.ProfilePic
+                };
+
+                // 2. Send the DTO instead of the full 'user' object
+                var response = await _httpClient.PutAsJsonAsync("api/Dates/UpdateAUser/UpdateUser", updateDto);
+
+                // 3. Return the result
+                return response.StatusCode.ToString() + ": " + await response.Content.ReadAsStringAsync();
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Error fetching user: {ex.Message}");
-                return null;
+                return "Exception: " + ex.Message;
             }
-        }
-        public static async Task<bool> RegisterUserAsync(User user)
-        {
-            var response = await _httpClient.PostAsJsonAsync("api/Dates/InsertAUser", user);
-
-            // IF THE REGISTRATION FAILS, WE CAPTURE THE SECRET REASON HERE:
-            if (!response.IsSuccessStatusCode)
-            {
-                string errorContent = await response.Content.ReadAsStringAsync();
-                System.Diagnostics.Debug.WriteLine("API ERROR REASON: " + errorContent);
-            }
-
-            return response.IsSuccessStatusCode;
         }
 
         public static async Task<bool> DeleteUserAsync(int userId)
         {
             try
             {
-                // Make sure this route matches your Delete endpoint in your Controller
                 var response = await _httpClient.DeleteAsync($"api/Dates/DeleteUser/DeleteUser/{userId}");
                 return response.IsSuccessStatusCode;
             }
-            catch
-            {
-                return false;
-            }
+            catch { return false; }
         }
+
+        // --- Discovery, Matches, & Messages ---
         public static async Task<List<City>> GetCitiesAsync()
         {
-            try
-            {
-                return await _httpClient.GetFromJsonAsync<List<City>>("api/Dates/CitySelector");
-            }
-            catch
-            {
-                return new List<City>();
-            }
-        } 
+            try { return await _httpClient.GetFromJsonAsync<List<City>>("api/Dates/CitySelector"); }
+            catch { return new List<City>(); }
+        }
 
         public static async Task<Preferences> GetPreferencesByUserIdAsync(int userId)
         {
-            try
-            {
-                // 1. Updated to match the doubled path: api/Dates/PreferencesSelector/5
-                string url = $"api/Dates/PreferencesSelector/{userId}";
-                System.Diagnostics.Debug.WriteLine($"Fetching Preferences from: {url}");
-
-                // 2. Use a direct request
-                var response = await _httpClient.GetAsync(url);
-
-                // 3. Log the result
-                if (response.IsSuccessStatusCode)
-                {
-                    return await response.Content.ReadFromJsonAsync<Preferences>();
-                }
-                else
-                {
-                    System.Diagnostics.Debug.WriteLine($"Failed to fetch preferences. Status: {response.StatusCode}");
-                    return null;
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"CRITICAL ERROR in GetPreferencesAsync: {ex.Message}");
-                return null;
-            }
+            try { return await _httpClient.GetFromJsonAsync<Preferences>($"api/Dates/PreferencesSelector/{userId}"); }
+            catch { return null; }
         }
 
         public static async Task<List<User>> GetDiscoveryFeedAsync(User currentUser, Preferences prefs)
         {
-            if (currentUser == null || prefs == null)
-            {
-                return new List<User>();
-            }
-
-            var options = new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = null // This forces C# to keep PascalCase (UserId, Preferences)
-            };
-
             try
             {
-                var payload = new DiscoveryFeedDTO
-                {
-                    UserId = currentUser.Id,
-                    Preferences = prefs
-                };
-
-                // Send the POST request
-                var response = await _httpClient.PostAsJsonAsync("api/Dates/GetDiscoveryFeed", payload, options);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    string errorContent = await response.Content.ReadAsStringAsync();
-                    System.Diagnostics.Debug.WriteLine($"API Error: {response.StatusCode} - {errorContent}");
-                    return new List<User>();
-                }
-
-                var results = await response.Content.ReadFromJsonAsync<List<User>>();
-                System.Diagnostics.Debug.WriteLine($"API returned {results?.Count ?? 0} users.");
-
-                return results ?? new List<User>();
+                var payload = new { UserId = currentUser.Id, Preferences = prefs };
+                var response = await _httpClient.PostAsJsonAsync("api/Dates/GetDiscoveryFeed", payload);
+                if (!response.IsSuccessStatusCode) return new List<User>();
+                return await response.Content.ReadFromJsonAsync<List<User>>();
             }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Error: {ex.Message}");
-                return new List<User>();
-            }
+            catch { return new List<User>(); }
         }
+
         public static async Task<bool> LikeUserAsync(int likerId, int likedId)
         {
             try
             {
-                // We use a POST request because we are changing data in the database
-                // We pass the IDs as query parameters to match the controller method
-                string url = $"api/Dates/LikeUser?likerId={likerId}&likedId={likedId}";
+                // Change this line in your ApiService:
+                var response = await _httpClient.PostAsync($"api/Dates/LikeUser/LikeUser?likerId={likerId}&likedId={likedId}", null);
+                // This will throw an exception if the server returns a 404 or 500 error
+                response.EnsureSuccessStatusCode();
 
-                var response = await _httpClient.PostAsync(url, null);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    // Read the JSON response to see if a match was found
-                    var result = await response.Content.ReadFromJsonAsync<MatchResult>();
-                    return result?.matchFound ?? false;
-                }
+                return await response.Content.ReadFromJsonAsync<bool>();
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Error liking user: {ex.Message}");
+                // Add a breakpoint here!
+                System.Diagnostics.Debug.WriteLine($"API ERROR: {ex.Message}");
+                return false;
             }
-
-            return false;
-        }
-
-        // Add this small helper class at the bottom of ApiService.cs 
-        // or in your Models folder to handle the API response
-        public class MatchResult
-        {
-            public bool matchFound { get; set; }
         }
 
         public static async Task<List<Matches>> GetMatchesForUserAsync(int userId)
         {
-            try
-            {
-                // Swagger shows the route is doubled: "api/Dates/GetMatchesForUser/GetMatchesForUser/{userId}"
-                string url = $"api/Dates/GetMatchesForUser/GetMatchesForUser/{userId}";
-
-                System.Diagnostics.Debug.WriteLine($"Fetching Matches from: {url}");
-
-                var response = await _httpClient.GetAsync(url);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    return await response.Content.ReadFromJsonAsync<List<Matches>>();
-                }
-                else
-                {
-                    System.Diagnostics.Debug.WriteLine($"Failed to fetch matches. Status: {response.StatusCode}");
-                    return new List<Matches>();
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Error in GetMatchesForUserAsync: {ex.Message}");
-                return new List<Matches>();
-            }
+            try { return await _httpClient.GetFromJsonAsync<List<Matches>>($"api/Dates/GetMatchesForUser/GetMatchesForUser/{userId}"); }
+            catch { return new List<Matches>(); }
         }
 
         public static async Task<List<Messages>> GetMessagesByMatchIdAsync(int matchId)
         {
-            try
-            {
-                // Updated URL to match the doubled route pattern: api/Dates/GetMessages/GetMessages/{matchId}
-                string url = $"api/Dates/GetMessages/GetMessages/{matchId}";
-
-                System.Diagnostics.Debug.WriteLine($"Fetching Messages from: {url}");
-
-                return await _httpClient.GetFromJsonAsync<List<Messages>>(url);
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Error fetching messages: {ex.Message}");
-                return new List<Messages>();
-            }
+            try { return await _httpClient.GetFromJsonAsync<List<Messages>>($"api/Dates/GetMessages/GetMessages/{matchId}"); }
+            catch { return new List<Messages>(); }
         }
 
         public static async Task<bool> SendMessageAsync(Messages msg)
         {
             try
             {
-                // Must match the doubled route pattern: api/Dates/SendMessage/SendMessage
-                string url = "api/Dates/SendMessage/SendMessage";
+                // Create the simple object structure
+                var dto = new
+                {
+                    msg.MatchID,
+                    msg.SenderID,
+                    msg.MessageText
+                };
 
-                var response = await _httpClient.PostAsJsonAsync(url, msg);
-
+                var response = await _httpClient.PostAsJsonAsync("api/Dates/SendMessage/SendMessage", dto);
                 return response.IsSuccessStatusCode;
             }
-            catch (Exception ex)
+            catch { return false; }
+        }
+
+        public static async Task<GenderList> GetGenderListIdAsync()
+        {
+            try { return await _httpClient.GetFromJsonAsync<GenderList>($"api/Dates/GenderSelector"); }
+            catch { return null; }
+        }
+
+        public static async Task<bool> CheckIsManagerAsync(int userId)
+        {
+            try
             {
-                System.Diagnostics.Debug.WriteLine($"Error sending message: {ex.Message}");
+                // This now expects a true/false response
+                return await _httpClient.GetFromJsonAsync<bool>($"api/Dates/IsManager/{userId}");
+            }
+            catch
+            {
+                // If an error occurs (or the API returns 404), return false
                 return false;
             }
         }
-    } 
-}
+        // --- Manager Methods ---
+        public static async Task<bool> VerifyManagerPasswordAsync(int userId, string password)
+        {
+            try
+            {
+                // This must match the URL that worked in your browser
+                return await _httpClient.GetFromJsonAsync<bool>($"api/Dates/VerifyManager/{userId}/{password}");
+            }
+            catch (Exception ex)
+            {
+                // Log the error to see exactly what is happening if it still fails
+                System.Diagnostics.Debug.WriteLine($"API Error: {ex.Message}");
+                return false;
+            }
+        }
 
+
+
+    }
+}

@@ -1,41 +1,41 @@
 ﻿using Microsoft.Win32;
 using ModelDates;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Meetandgreet.Pages
 {
-    /// <summary>
-    /// Interaction logic for Editprofile.xaml
-    /// </summary>
     public partial class Editprofile : Page
     {
         private User _currentUser;
 
-        // Constructor receives the user so we know who to update
+        // Required constructor for NavigationService
+        public Editprofile() { InitializeComponent(); }
+
         public Editprofile(User user)
         {
             InitializeComponent();
             _currentUser = user;
 
-            // 1. Pre-fill the UI with current data
             BioInput.Text = _currentUser.Bio;
-            if (!string.IsNullOrEmpty(_currentUser.Profilepic))
+
+            // Only try to load if the string is a valid path
+            if (!string.IsNullOrWhiteSpace(_currentUser.ProfilePic) && System.IO.File.Exists(_currentUser.ProfilePic))
             {
-                ProfileImageBrush.ImageSource = new BitmapImage(new Uri(_currentUser.Profilepic));
+                try
+                {
+                    ProfileImageBrush.ImageSource = new BitmapImage(new Uri(_currentUser.ProfilePic));
+                }
+                catch { }
             }
+        }
+
+        private void BackBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (NavigationService.CanGoBack) NavigationService.GoBack();
         }
 
         private void UploadPic_Click(object sender, RoutedEventArgs e)
@@ -43,28 +43,30 @@ namespace Meetandgreet.Pages
             var fileDialog = new OpenFileDialog { Filter = "Image files (*.png;*.jpg)|*.png;*.jpg" };
             if (fileDialog.ShowDialog() == true)
             {
-                _currentUser.Profilepic = fileDialog.FileName; // Stores the local path
+                _currentUser.ProfilePic = fileDialog.FileName;
                 ProfileImageBrush.ImageSource = new BitmapImage(new Uri(fileDialog.FileName));
             }
         }
 
         private async void SaveBtn_Click(object sender, RoutedEventArgs e)
         {
-            // 2. Update the user object with new input
             _currentUser.Bio = BioInput.Text;
+            System.Diagnostics.Debug.WriteLine($"DEBUG: Sending Profile Picture Path: {_currentUser.ProfilePic}");
 
-            // 3. Send to API
-            bool success = await ApiService.UpdateUserAsync(_currentUser);
+            // Change 'bool' to 'string' to catch the status message
+            string result = await ApiService.UpdateUserAsync(_currentUser);
 
-            if (success)
+            // Check if the result starts with "OK" (200)
+            if (result.Contains("OK"))
             {
                 MessageBox.Show("Profile updated successfully!");
                 NavigationService.GoBack();
             }
             else
             {
-                MessageBox.Show("Update failed. Please try again.");
+                // Show the actual error message returned by the API
+                MessageBox.Show("Update failed: " + result);
             }
         }
     }
-    }
+}

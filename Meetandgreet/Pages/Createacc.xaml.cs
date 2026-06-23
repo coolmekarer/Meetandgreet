@@ -73,13 +73,13 @@ namespace Meetandgreet.Pages
             int selectedGenderId = 3;
             if (MaleBtn.IsChecked == true) selectedGenderId = 2;
             else if (FemaleBtn.IsChecked == true) selectedGenderId = 1;
-
-            User newUser = new User
+            Gender currentGender =(await ApiService.GetGenderListIdAsync()).Find(x=>x.Id==selectedGenderId);
+            Preferences newUser = new Preferences
             {
                 Username = fullName,
                 Email = email,
                 Password = password,
-                Gender = new Gender { Id = selectedGenderId, Name = "Default" },
+                Gender = currentGender,
                 City = selectedCity, // ATTACHED VALID LOCATION ENTITY HERE!
                 CreatedAt = DateTime.Now
             };
