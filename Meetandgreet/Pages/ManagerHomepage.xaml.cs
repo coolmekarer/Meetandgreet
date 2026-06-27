@@ -38,12 +38,12 @@ namespace Meetandgreet.Pages
 
         private async void Edit_Click(object sender, RoutedEventArgs e)
         {
-            // Get the user from the button's DataContext
             var user = (sender as Button).DataContext as User;
             if (user != null)
             {
-                // Navigate to your existing Edit page, passing the user
-                NavigationService.Navigate(new Editprofile(user));
+                // This will open the profile exactly as it is for the user,
+                // allowing the manager to edit, add photos, or delete photos.
+                NavigationService.Navigate(new Profile(user.Id));
             }
         }
 

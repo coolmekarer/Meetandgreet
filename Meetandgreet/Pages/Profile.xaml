@@ -4,57 +4,73 @@
       Title="Profile">
 
     <Page.Background>
-        <ImageBrush ImageSource="/Images/glassbg.jpg" 
-                    Stretch="UniformToFill" 
-                    Opacity="0.8"/>
+        <ImageBrush ImageSource="/Images/glassbg.jpg" Stretch="UniformToFill" Opacity="0.8"/>
     </Page.Background>
 
-    <StackPanel Margin="40" MaxWidth="500">
-        <Button Content="← Back" Click="BackBtn_Click" HorizontalAlignment="Left" 
-                Background="Transparent" Foreground="White" BorderThickness="0" Margin="0,0,0,20"/>
+    <!-- ScrollViewer added here to enable scrolling for the entire page content -->
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="40" MaxWidth="500" HorizontalAlignment="Center">
+            <Button Content="← Back" Click="BackBtn_Click" HorizontalAlignment="Left" 
+                    Background="Transparent" Foreground="White" BorderThickness="0" Margin="0,0,0,20"/>
 
-        <Border Width="200" Height="200" CornerRadius="100" Background="#333333" HorizontalAlignment="Center">
-            <Image x:Name="ProfilePhoto" Stretch="UniformToFill"/>
-        </Border>
+            <Border Width="200" Height="200" CornerRadius="100" Background="#333333" HorizontalAlignment="Center">
+                <Image x:Name="ProfilePhoto" Stretch="UniformToFill"/>
+            </Border>
 
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
-            <TextBlock x:Name="UsernameTxt" FontSize="32" FontWeight="Bold" Foreground="White"/>
-            <TextBlock x:Name="AgeTxt" FontSize="32" Margin="15,0,0,0" Foreground="#FF4D4D"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
+                <TextBlock x:Name="UsernameTxt" FontSize="32" FontWeight="Bold" Foreground="White"/>
+                <TextBlock x:Name="AgeTxt" FontSize="32" Margin="15,0,0,0" Foreground="#FF4D4D"/>
+            </StackPanel>
+
+            <TextBlock x:Name="BioTxt" TextAlignment="Center" Foreground="#DDFFFFFF" 
+                       Margin="0,20,0,0" TextWrapping="Wrap" FontSize="16"/>
+
+            <!-- Profile Management Buttons -->
+            <Button x:Name="EditProfileBtn" Content="Edit Profile" Margin="0,30,0,0" 
+                    Background="#FF4D4D" Foreground="White" Padding="10" Click="EditProfileBtn_Click" />
+
+            <!-- NEW EDIT GALLERY BUTTON -->
+            <Button x:Name="EditGalleryBtn" Content="Edit Gallery" Margin="0,10,0,0" 
+                    Background="#FF4D4D" Foreground="White" Padding="10" Click="EditGalleryBtn_Click" />
+
+            <!-- NEW GALLERY EDITOR GRID (Hidden by default) -->
+            <Grid x:Name="GalleryEditor" Visibility="Collapsed" Margin="0,20,0,0">
+                <StackPanel>
+                    <!-- ADD NEW PHOTO BUTTON -->
+                    <Button Content="Add New Photo" Click="AddPhoto_Click" 
+                            Background="#4CAF50" Foreground="White" Margin="0,0,0,10" Padding="5"/>
+
+                    <ItemsControl x:Name="GalleryGrid">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel HorizontalAlignment="Center" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Margin="5" MouseEnter="ShowButtons_MouseEnter" MouseLeave="HideButtons_MouseLeave">
+                                    <Grid>
+                                        <Image Source="{Binding Url}" Width="100" Height="100" Stretch="UniformToFill"/>
+                                        <StackPanel x:Name="HoverButtons" Visibility="Collapsed" VerticalAlignment="Center">
+                                            <Button Content="Change" Click="ChangePic_Click" />
+                                            <Button Content="Delete" Click="DeletePic_Click" />
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Grid>
+
+            <!-- Your existing Color Picker and Account Buttons below -->
+       
+
+            <StackPanel Orientation="Vertical" Margin="0,50,0,0">
+                <Button x:Name="LogoutBtn" Content="Log Out" Click="LogoutBtn_Click" Background="#444444" Foreground="White" Padding="10" Margin="0,0,0,10" Cursor="Hand"/>
+                <Button x:Name="DeleteAccBtn" Content="Delete Account" Click="DeleteAccBtn_Click" Background="#8B0000" Foreground="White" Padding="10" Cursor="Hand"/>
+            </StackPanel>
         </StackPanel>
-
-        <TextBlock x:Name="BioTxt" TextAlignment="Center" Foreground="#DDFFFFFF" 
-                   Margin="0,20,0,0" TextWrapping="Wrap" FontSize="16"/>
-
-        <Button x:Name="EditProfileBtn" Content="Edit Profile" Margin="0,30,0,0" 
-        Background="#FF4D4D" Foreground="White" Padding="10" 
-        Click="EditProfileBtn_Click" />
-        <StackPanel Margin="40" MaxWidth="500">
-            <TextBlock Text="Choose Background Color:" Foreground="White" Margin="0,20,0,5"/>
-            <ComboBox x:Name="ColorPicker" SelectionChanged="ColorPicker_SelectionChanged" Width="200" HorizontalAlignment="Left">
-                <ComboBoxItem Content="Black" Tag="#111111"/>
-                <ComboBoxItem Content="Dark Blue" Tag="#1a1a2e"/>
-                <ComboBoxItem Content="Dark Red" Tag="#2e1111"/>
-                <ComboBoxItem Content="Dark Green" Tag="#112e11"/>
-                <ComboBoxItem Content="Purple" Tag="#2a112e"/>
-            </ComboBox>
-        </StackPanel>
-        <StackPanel Orientation="Vertical" Margin="0,50,0,0">
-            <Button x:Name="LogoutBtn" 
-            Content="Log Out" 
-            Click="LogoutBtn_Click" 
-            Background="#444444" 
-            Foreground="White" 
-            Padding="10" 
-            Margin="0,0,0,10"
-            Cursor="Hand"/>
-
-            <Button x:Name="DeleteAccBtn" 
-            Content="Delete Account" 
-            Click="DeleteAccBtn_Click" 
-            Background="#8B0000" 
-            Foreground="White" 
-            Padding="10" 
-            Cursor="Hand"/>
-        </StackPanel>
-    </StackPanel>
+    </ScrollViewer>
 </Page>

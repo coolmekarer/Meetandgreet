@@ -43,14 +43,18 @@ namespace Meetandgreet.Pages
             // Display the first available card
             ShowNextDiscoveryProfile();
         }
-        private void ShowNextDiscoveryProfile()
+        // Change this method to async
+        private async void ShowNextDiscoveryProfile()
         {
             if (_discoveryQueue != null && _queueIndex < _discoveryQueue.Count)
             {
                 User nextMatch = _discoveryQueue[_queueIndex];
 
-                // FIX: Changed LoadRealDiscoveryFeed to LoadUserProfileOnFeed
-                LoadUserProfileOnFeed(nextMatch, null);
+                // Fetch the photos for this specific user from your API
+                List<Photos> photosForUser = await ApiService.GetPhotosByUserIdAsync(nextMatch.Id);
+
+                // Pass the list of photos instead of null
+                LoadUserProfileOnFeed(nextMatch, photosForUser);
             }
             else
             {
@@ -58,7 +62,7 @@ namespace Meetandgreet.Pages
                 FeedUsernameTxt.Text = "No more matches found!";
                 FeedAgeTxt.Text = "";
                 FeedBioTxt.Text = "Try widening your age preferences in your settings.";
-                CurrentDisplayedImage.Source = new BitmapImage(new Uri("/Images/defaultprofile.png", UriKind.RelativeOrAbsolute));
+                CurrentDisplayedImage.Source = new BitmapImage(new Uri("pack://application:,,,/Images/defaultprofile.png", UriKind.RelativeOrAbsolute));
             }
         }
 
@@ -69,17 +73,7 @@ namespace Meetandgreet.Pages
             _currentProfileGallery.Clear();
             _currentPhotoIndex = 0;
 
-            // Safety check: Make sure we handle relative or missing image strings safely
-            if (!string.IsNullOrEmpty(displayedUser.ProfilePic) && displayedUser.ProfilePic.StartsWith("/Images"))
-            {
-                _currentProfileGallery.Add(displayedUser.ProfilePic);
-            }
-            else
-            {
-                // Use a clean relative fallback path format
-                _currentProfileGallery.Add("pack://application:,,,/Images/defaultprofile.png");
-            }
-
+            // 1. Add gallery photos FIRST
             if (userPhotos != null)
             {
                 foreach (var photo in userPhotos)
@@ -88,7 +82,22 @@ namespace Meetandgreet.Pages
                 }
             }
 
-            // Assigning the text values BEFORE updating the image so they are guaranteed to display!
+            // 2. Add ProfilePic only if the gallery is empty, or as the last item
+            // If you NEVER want it to start with the profile pic, you can just add it 
+            // only if the gallery is empty.
+            if (_currentProfileGallery.Count == 0)
+            {
+                if (!string.IsNullOrEmpty(displayedUser.ProfilePic) && displayedUser.ProfilePic.StartsWith("/Images"))
+                {
+                    _currentProfileGallery.Add(displayedUser.ProfilePic);
+                }
+                else
+                {
+                    _currentProfileGallery.Add("pack://application:,,,/Images/defaultprofile.png");
+                }
+            }
+
+            // Assigning the text values
             FeedUsernameTxt.Text = !string.IsNullOrEmpty(displayedUser.Username) ? displayedUser.Username : "Unknown User";
             FeedAgeTxt.Text = displayedUser.Age > 0 ? displayedUser.Age.ToString() : "--";
             FeedBioTxt.Text = !string.IsNullOrEmpty(displayedUser.Bio) ? displayedUser.Bio : "No bio provided.";

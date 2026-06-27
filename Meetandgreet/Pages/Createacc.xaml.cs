@@ -63,6 +63,11 @@ namespace Meetandgreet.Pages
                 MessageBox.Show("Please fill out all fields to join the garden.");
                 return;
             }
+            if (!email.EndsWith("@gmail.com", StringComparison.OrdinalIgnoreCase))
+            {
+                MessageBox.Show("The email is not formatted correctly.");
+                return;
+            }
 
             if (selectedCity == null)
             {

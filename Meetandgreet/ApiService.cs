@@ -9,7 +9,7 @@ namespace Meetandgreet
 {
     public static class ApiService
     {
-        private static readonly HttpClient _httpClient = new HttpClient
+        public static readonly HttpClient _httpClient = new HttpClient
         {
             BaseAddress = new Uri("https://krpx2rgs-5105.uks1.devtunnels.ms/")
         };
@@ -188,6 +188,33 @@ namespace Meetandgreet
                 System.Diagnostics.Debug.WriteLine($"API Error: {ex.Message}");
                 return false;
             }
+        }
+
+        // --- Photo Management Methods ---
+        // Change to match Swagger: /api/Dates/GetPhotos/GetPhotos/{userId}
+        public static async Task<List<Photos>> GetPhotosByUserIdAsync(int userId)
+        {
+            try { return await _httpClient.GetFromJsonAsync<List<Photos>>($"api/Dates/GetPhotos/GetPhotos/{userId}"); }
+            catch { return new List<Photos>(); }
+        }
+
+        // Change to match Swagger: /api/Dates/InsertPhoto/InsertPhoto
+        public static async Task<bool> UploadPhotoAsync(int userId, string url)
+        {
+            var dto = new { UserId = userId, Url = url };
+            var response = await _httpClient.PostAsJsonAsync("api/Dates/InsertPhoto/InsertPhoto", dto);
+            return response.IsSuccessStatusCode;
+        }
+
+        // Change to match Swagger: /api/Dates/DeletePhoto/DeletePhoto/{photoId}
+        public static async Task<bool> DeletePhotoAsync(int photoId)
+        {
+            try
+            {
+                var response = await _httpClient.DeleteAsync($"api/Dates/DeletePhoto/DeletePhoto/{photoId}");
+                return response.IsSuccessStatusCode;
+            }
+            catch { return false; }
         }
 
 
